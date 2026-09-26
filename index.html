@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>海洋油污擴散即時模擬與預警系統</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- 自訂樣式 -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="sidebar">
+        <h2>🌊 海洋油污擴散模擬器</h2>
+        
+        <div class="stat-card">
+            <label>目前預測時間</label>
+            <div id="currentTime" class="stat-value">T+00:00 (00:00)</div>
+            <div class="badge" id="riskBadge">⚠️ 高風險區：高雄港航道近岸</div>
+        </div>
+
+        <div class="control-group">
+            <label>播放控制</label>
+            <div class="btn-group">
+                <button id="playBtn">▶ 播放</button>
+                <button id="pauseBtn">⏸ 暫停</button>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label id="sliderLabel">模擬時間軸: 第 0 步</label>
+            <input type="range" id="timeSlider" min="0" max="0" value="0">
+        </div>
+
+        <div class="stat-card">
+            <label>模擬參數</label>
+            <p style="font-size: 0.85rem; margin-top: 5px; color: #cbd5e1;">
+                📍 事故點：高雄港外海<br>
+                💨 即時風向：東北風 (3% 拖曳率)<br>
+                🌊 當前海流：0.4 m/s (向東)
+            </p>
+        </div>
+    </div>
+
+    <div id="map"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- 自訂 JavaScript 邏輯 -->
+    <script src="script.js"></script>
+</body>
+</html>
