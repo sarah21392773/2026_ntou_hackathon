@@ -267,6 +267,10 @@ def create_initial_particles(
     return particles
 
 
+def _cross_product(o, a, b):
+    return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+
+
 # ==================================================
 # 8. 計算粒子分布的估算面積
 # ==================================================
@@ -311,17 +315,11 @@ def calculate_area_km2(particles):
     if len(points) < 3:
         return 0.0
 
-    def cross(o, a, b):
-        return (
-            (a[0] - o[0]) * (b[1] - o[1])
-            - (a[1] - o[1]) * (b[0] - o[0])
-        )
-
     lower = []
     for p in points:
         while (
             len(lower) >= 2
-            and cross(lower[-2], lower[-1], p) <= 0
+            and _cross_product(lower[-2], lower[-1], p) <= 0
         ):
             lower.pop()
         lower.append(p)
@@ -330,7 +328,7 @@ def calculate_area_km2(particles):
     for p in reversed(points):
         while (
             len(upper) >= 2
-            and cross(upper[-2], upper[-1], p) <= 0
+            and _cross_product(upper[-2], upper[-1], p) <= 0
         ):
             upper.pop()
         upper.append(p)
@@ -377,18 +375,15 @@ def calculate_convex_hull_geo(particles):
     if len(points) < 3:
         return []
 
-    def cross(o, a, b):
-        return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
-
     lower = []
     for p in points:
-        while len(lower) >= 2 and cross(lower[-2], lower[-1], p) <= 0:
+        while len(lower) >= 2 and _cross_product(lower[-2], lower[-1], p) <= 0:
             lower.pop()
         lower.append(p)
 
     upper = []
     for p in reversed(points):
-        while len(upper) >= 2 and cross(upper[-2], upper[-1], p) <= 0:
+        while len(upper) >= 2 and _cross_product(upper[-2], upper[-1], p) <= 0:
             upper.pop()
         upper.append(p)
 

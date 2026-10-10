@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="台灣海岸油污擴散模擬與預警應變指揮系統 - 結合中央氣象署即時風場、海流漂移向量、海岸碰撞與港口高風險預警分析">
+  <meta name="description" content="台灣海岸油污擴散模擬與預警應變指揮系統">
   <title>油跡可循-台灣海岸油污擴散模擬與預警系統 | Taiwan Marine Oil Spill Warning System</title>
   
   <!-- Leaflet CSS 地圖套件 -->
@@ -34,28 +34,25 @@
           <span id="system-status-text">系統就緒</span>
         </div>
         <div class="title-actions">
-          <button id="btn-toggle-sound" class="icon-btn" title="切換海難警報音效反饋">🔊</button>
           <button id="btn-collapse-sidebar" class="icon-btn" title="收合側邊控制面板">✕</button>
         </div>
       </div>
-      <h1>🌊 油跡可循 - OilTrace</h1>
-      <p class="subtitle">台灣海岸油污擴散模擬與預警系統</p>
+      <h1>🌊 油跡可循 - Oil Trace</h1>
+      <p class="subtitle">台灣海岸油污擴散預警系統</p>
     </div>
 
-    <!-- 演練情境標籤頁 (常見情境 vs 歷史重大海難) -->
+    <!-- 歷史重大事故與常見演練情境 -->
     <div class="section preset-section">
       <div class="section-header">
-        <h3>歷史重大事故與常見事故模擬</h3>
+        <h3>🎯 歷史重大事故與常見事故模擬</h3>
       </div>
       
-      <!-- 下拉選單列：常見演練 / 歷史重大海難 -->
       <div class="scenario-dropdown-bar" id="scenario-dropdown-bar">
-
         <!-- 常見演練下拉選單 -->
         <div class="dropdown" id="dd-presets">
           <button type="button" class="tab-btn dropdown-trigger" id="tab-presets"
                   aria-haspopup="true" aria-expanded="false" data-default-label="🎯 常見演練">
-            <span class="dd-label">常見事故模擬</span>
+            <span class="dd-label">🎯 常見事故</span>
             <span class="dd-caret">▾</span>
           </button>
           <div id="panel-presets" class="dropdown-menu" role="menu">
@@ -78,12 +75,12 @@
         <div class="dropdown" id="dd-history">
           <button type="button" class="tab-btn dropdown-trigger" id="tab-history"
                   aria-haspopup="true" aria-expanded="false" data-default-label="🏛️ 歷史重大海難">
-            <span class="dd-label">歷史重大事故</span>
+            <span class="dd-label">🏛️ 歷史重大事故</span>
             <span class="dd-caret">▾</span>
           </button>
           <div id="panel-history" class="dropdown-menu history-list" role="menu">
-            <button class="history-card-btn" data-hist-id="angel2021">
-              <div class="hist-title">🚢 2021 高雄天使輪 (Angel)</div>
+            <button class="history-card-btn" data-hist-id="angel2023">
+              <div class="hist-title">🚢 2023 高雄天使輪 (Angel)</div>
               <div class="hist-sub">重油沈沒 ｜ 旗津/南星外海 ｜ 36H</div>
             </button>
             <button class="history-card-btn" data-hist-id="tstaipei2016">
@@ -96,39 +93,53 @@
             </button>
           </div>
         </div>
-
       </div>
     </div>
 
-    <!-- 模式、光譜與油種參數設定 -->
+    <!-- 模擬方式與參數設定 -->
     <div class="section">
       <div class="section-header">
-        <h3>⚙️ 計算引擎與油品光譜</h3>
+        <h3>⚙️ 選擇模擬方式與參數</h3>
       </div>
-      
+
+      <!-- 初始座標設定 -->
+      <div class="param-group">
+        <div class="grid-title">初始座標：</div>
+        <div class="coord-input-grid">
+            <div class="input-field">
+              <label for="input-lat">北緯緯度 (Latitude °N)</label>
+              <input type="number" id="input-lat" step="0.0001" placeholder="例如: 22.5600" value="22.5600">
+            </div>
+            <div class="input-field">
+              <label for="input-lng">東經經度 (Longitude °E)</label>
+              <input type="number" id="input-lng" step="0.0001" placeholder="例如: 120.1500" value="120.1500">
+            </div>
+        </div>
+      </div>
+
       <div class="param-group">
         <label for="mode-select">計算引擎模式：</label>
         <select id="mode-select">
-          <option value="MOCK">前端高速模擬 (含海岸防穿透)</option>
           <option value="API">對接 Python 後端 (氣象署實測)</option>
+          <option value="MOCK">前端高速模擬 (含海岸防穿透)</option>
         </select>
       </div>
 
       <div class="param-group">
         <label for="oil-select">洩漏油品種類：</label>
         <select id="oil-select">
-          <option value="crude">🛢️ 重質原油 (Heavy Crude)</option>
-          <option value="diesel">⛽ 輕柴油 (Marine Diesel)</option>
-          <option value="hfo">🚢 船用燃料重油 (HFO 380)</option>
-          <option value="condensate">🧪 輕質凝析油/化學品</option>
+          <option value="HFO">🛢️ 重油／重燃料油 (HFO)</option>
+          <option value="MDO">🚢 船用柴油 (MDO)</option>
+          <option value="MGO">⛽ 船用輕柴油 (MGO)</option>
         </select>
       </div>
 
       <div class="param-group">
-        <label for="render-style-select">油膜遙測可視化：</label>
-        <select id="render-style-select">
-          <option value="realistic">擬真海面油膜 (Natural Color)</option>
-          <option value="thermal">🔥 SAR/光學厚度遙測 (Thermal)</option>
+        <label for="spill-size-select">初始洩漏規模：</label>
+        <select id="spill-size-select">
+          <option value="small">🟢 小型 (0.1–0.3 公頃，微量管線滲漏)</option>
+          <option value="medium" selected>🟡 中型 (5–15 km²，貨輪破艙外溢)</option>
+          <option value="large">🔴 大型 (至少 1000 km²，特大巨量浩劫)</option>
         </select>
       </div>
 
@@ -144,13 +155,15 @@
         <label class="checkbox-container">
           <input type="checkbox" id="toggle-coastlines-cb" checked>
           <span class="checkmark"></span>
-          顯示重點港口與生態防線 (ESI 敏感度)
+          顯示重要港口與生態防線 (ESI 敏感度)
         </label>
+
         <label class="checkbox-container" style="margin-top:6px;">
           <input type="checkbox" id="toggle-depots-cb" checked>
           <span class="checkmark"></span>
           顯示海保署應變資材基地與待命船隊
         </label>
+
         <label class="checkbox-container" style="margin-top:6px;">
           <input type="checkbox" id="toggle-boom-cb">
           <span class="checkmark"></span>
@@ -159,10 +172,10 @@
       </div>
     </div>
 
-    <!-- 擴散實時參數調校 -->
+    <!-- 海象參數調整 -->
     <div class="section">
       <div class="section-header">
-        <h3>🧭 實時海象參數 (動態聯動)</h3>
+        <h3>🧭 海象參數</h3>
       </div>
 
       <div class="param-group">
@@ -178,7 +191,7 @@
       <input type="range" id="wind-slider" min="1" max="3" value="2" step="1" class="custom-slider">
     </div>
 
-    <!-- 即時情資監控指標 (Metrics) -->
+    <!-- 即時情資監控指標 -->
     <div class="section metrics-section">
       <div class="section-header">
         <h3>📊 油污即時動態指標 (當前影格)</h3>
@@ -225,7 +238,7 @@
       </div>
     </div>
 
-    <!-- 24H 擴散與漂移趨勢微圖 (Interactive Sparkline Chart) -->
+    <!-- 24H 擴散與漂移趨勢微圖 -->
     <div class="section chart-section">
       <div class="section-header">
         <h3>📈 擴散面積成長曲線 (點選小時即時跳轉)</h3>
@@ -267,30 +280,45 @@
 
     <!-- 地圖浮動工具列 (右上角) -->
     <div class="map-toolbar">
-      <div class="toolbar-row">
-        <button id="btn-open-coords-modal" class="map-tool-btn" title="手動輸入事故經緯度坐標">
-          📍 坐標輸入
-        </button>
-        <button id="btn-toggle-fullscreen" class="map-tool-btn" title="切換全螢幕顯示">
-          ⛶ 全螢幕
-        </button>
-        <button id="btn-reset-view" class="map-tool-btn" title="回台灣全覽視角">
-          🇹🇼 全覽
-        </button>
-        <button id="btn-focus-spill" class="map-tool-btn" title="聚焦於油污中心" disabled>
-          🎯 聚焦油污
-        </button>
-      </div>
-      <div class="toolbar-row">
-        <button id="btn-toggle-legend" class="map-tool-btn" title="開關地圖圖例">
-          📑 圖例
-        </button>
-      </div>
+      <button id="btn-toggle-report" class="map-tool-btn btn-highlight" title="開啟 / 關閉海岸衝擊與應變處置報告" disabled>
+        📋 報告
+      </button>
+      <button id="btn-toggle-fullscreen" class="map-tool-btn" title="切換全螢幕顯示">
+        ⛶ 全螢幕
+      </button>
+      <button id="btn-reset-view" class="map-tool-btn" title="回台灣全覽視角">
+        🇹🇼 全覽
+      </button>
+      <button id="btn-focus-spill" class="map-tool-btn" title="聚焦於油污中心" disabled>
+        🎯 聚焦油污
+      </button>
+      <button id="btn-toggle-legend" class="map-tool-btn" title="開關地圖圖例">
+        📑 圖例
+      </button>
     </div>
 
-    <!-- 右側欄：圖例在上、報告面板在下，皆靠右對齊 -->
-    <div class="map-right-stack">
-    <!-- 地圖圖例 (右上角，工具列下方) -->
+    <!-- 海岸衝擊與應變處置報告面板 -->
+    <section id="report-panel" class="report-panel hidden" data-state="idle" aria-label="海岸衝擊與應變處置報告">
+      <div class="report-panel-header">
+        <h3>🚨 海岸衝擊與應變處置報告</h3>
+        <button id="btn-close-report-panel" class="legend-close" title="關閉報告">×</button>
+      </div>
+      <div id="alert-box">
+        <div class="alert-item alert-info">
+          💡 請點擊地圖海域、手動輸入坐標，或點選左側「情境」開始動態模擬與分析。
+        </div>
+      </div>
+      <div class="report-actions">
+        <button id="btn-download-geojson" class="map-tool-btn" title="下載標準 GIS GeoJSON 航跡資料">
+          💾 匯出 GeoJSON
+        </button>
+        <button id="btn-open-report-modal" class="map-tool-btn btn-highlight" title="匯出正式事故應變通報單">
+          📄 應變通報單
+        </button>
+      </div>
+    </section>
+
+    <!-- 地圖圖例 (右下角) -->
     <div class="map-legend" id="map-legend">
       <div class="legend-header">
         <span>圖例說明</span>
@@ -326,28 +354,6 @@
       </div>
     </div>
 
-    <!-- 海岸衝擊與應變處置報告 (模擬完成後浮現，可關閉) -->
-    <section id="report-panel" class="report-panel hidden" data-state="idle" aria-label="海岸衝擊與應變處置報告">
-      <div class="report-panel-header">
-        <h3>🚨 海岸衝擊與應變處置報告</h3>
-        <button id="btn-close-report-panel" class="legend-close" title="關閉報告">×</button>
-      </div>
-      <div id="alert-box">
-        <div class="alert-item alert-info">
-          💡 請點擊地圖海域、手動輸入坐標，或點選左側「情境」開始動態模擬與分析。
-        </div>
-      </div>
-      <div class="report-actions">
-        <button id="btn-download-geojson" class="map-tool-btn" title="下載標準 GIS GeoJSON 航跡資料">
-          💾 匯出 GeoJSON
-        </button>
-        <button id="btn-open-report-modal" class="map-tool-btn btn-highlight" title="匯出正式事故應變通報單">
-          📄 應變通報單
-        </button>
-      </div>
-    </section>
-    </div>
-
     <!-- 陸地防呆 Toast 提示 -->
     <div id="toast" class="toast hidden">
       <span class="toast-icon">⚠️</span>
@@ -374,40 +380,7 @@
     </section>
   </main>
 
-  <!-- ==================== 手動坐標輸入彈窗 (Modal) ==================== -->
-  <div class="modal-overlay hidden" id="modal-coords">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3>📍 精準事故坐標輸入 (WGS84)</h3>
-        <button class="modal-close-btn" id="btn-close-coords-modal">×</button>
-      </div>
-      <div class="modal-body">
-        <p class="modal-desc">可直接輸入海事巡防或雷達回報之經緯度數值，系統將自動進行海陸安全判定：</p>
-        <div class="coord-input-grid">
-          <div class="input-field">
-            <label for="input-lat">北緯緯度 (Latitude °N):</label>
-            <input type="number" id="input-lat" step="0.0001" placeholder="例如: 22.5600" value="22.5600">
-          </div>
-          <div class="input-field">
-            <label for="input-lng">東經經度 (Longitude °E):</label>
-            <input type="number" id="input-lng" step="0.0001" placeholder="例如: 120.1500" value="120.1500">
-          </div>
-        </div>
-        <div class="quick-preset-chips">
-          <span>常用快速填入：</span>
-          <button class="chip-btn" data-lat="22.61" data-lng="120.20">高雄一港口外</button>
-          <button class="chip-btn" data-lat="24.28" data-lng="120.42">台中港主航道</button>
-          <button class="chip-btn" data-lat="25.18" data-lng="121.72">基隆野柳外海</button>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-cancel" id="btn-cancel-coords">取消</button>
-        <button class="btn-submit" id="btn-submit-coords">確認定位並模擬 ➔</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== 應變處置通報單彈窗 (Modal) ==================== -->
+  <!-- 應變處置通報單彈窗 (Modal) -->
   <div class="modal-overlay hidden" id="modal-report">
     <div class="modal-card modal-large">
       <div class="modal-header">
