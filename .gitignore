@@ -7,6 +7,10 @@ _site/
 .jekyll-cache/
 .jekyll-metadata
 
+# ignore api key
+config.json
+*.json
+
 # Additional Ruby/bundler ignore for when you run: bundle install
 /vendor
 
