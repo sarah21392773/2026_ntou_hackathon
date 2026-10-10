@@ -1,10 +1,10 @@
 // src/constants.js
 
 export const API_CONFIG = {
-  baseUrl: typeof window !== 'undefined' && window.location.port === '5000'
-    ? `${window.location.origin}/api/v1`
-    : "http://127.0.0.1:5000/api/v1",
-  endpoint: "/simulate-spill"
+    baseUrl: typeof window !== 'undefined' && window.location.hostname === '127.0.0.1'
+        ? "http://127.0.0.1:5000/api/v1"
+        : "https://two026-ntou-hackathon.onrender.com/api/v1",
+    endpoint: "/simulate-spill"
 };
 
 export const OIL_PROFILES = {
