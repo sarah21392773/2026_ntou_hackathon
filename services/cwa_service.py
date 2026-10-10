@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 def get_cwa_api_key() -> str:
     """從環境變數或根目錄的 config.json 取得 CWA API Key"""
-    api_key = os.getenv("CWA_API_KEY")
+    api_key = os.environ.get("CWAR_API_KEY")
     if not api_key:
         # 優先搜尋專案根目錄，相容 src/config.json
         candidate_paths = [
