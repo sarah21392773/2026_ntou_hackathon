@@ -205,33 +205,98 @@ body {
   letter-spacing: 0.4px;
 }
 
-/* 演練情境標籤頁 */
-.scenario-tab-bar {
+/* 演練情境下拉選單 */
+.scenario-dropdown-bar {
+  position: relative;
   display: flex;
-  background: #091224;
-  border-radius: 6px;
-  padding: 3px;
-  margin-bottom: 9px;
-  border: 1px solid rgba(56, 189, 248, 0.2);
+  gap: 8px;
 }
 
-.tab-btn {
+.dropdown {
   flex: 1;
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  font-size: 0.76rem;
+  min-width: 0;
+}
+
+.dropdown .dropdown-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  background: #091224;
+  color: #cbd5e1;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 0.8rem;
   font-weight: 600;
-  padding: 5px 8px;
-  border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s;
 }
 
-.tab-btn.active {
-  background: rgba(0, 242, 254, 0.2);
+.dropdown .dropdown-trigger .dd-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dropdown .dropdown-trigger .dd-caret {
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  transition: transform 0.2s ease;
+}
+
+.dropdown .dropdown-trigger:hover,
+.dropdown.open .dropdown-trigger,
+.dropdown .dropdown-trigger.has-selection {
+  background: rgba(0, 242, 254, 0.15);
+  border-color: var(--accent-cyan);
   color: var(--accent-cyan);
-  border: 1px solid rgba(0, 242, 254, 0.4);
+}
+
+.dropdown.open .dropdown-trigger .dd-caret {
+  transform: rotate(180deg);
+}
+
+/* 歷史海難使用琥珀色強調，與原卡片風格一致 */
+#dd-history .dropdown-trigger:hover,
+#dd-history.open .dropdown-trigger,
+#dd-history .dropdown-trigger.has-selection {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: #f59e0b;
+  color: #fbbf24;
+}
+
+/* 下拉選單面板 */
+.dropdown-menu {
+  display: none !important;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 1200;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  background: #0b1630;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6);
+}
+
+.dropdown.open .dropdown-menu {
+  display: flex !important;
+  animation: ddFadeIn 0.15s ease-out;
+}
+
+.dropdown-menu .preset-btn,
+.dropdown-menu .history-card-btn {
+  width: 100%;
+}
+
+@keyframes ddFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* 歷史海難列表 */
@@ -533,12 +598,12 @@ body {
 }
 
 .seg-floating { background: #10b981; }
-.seg-evap { background: #f59e0b; }
 .seg-beached { background: #ef4444; }
 
 .mass-legend {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 16px;
   font-size: 0.68rem;
   color: #cbd5e1;
 }
@@ -551,7 +616,6 @@ body {
   margin-right: 3px;
 }
 .dot-floating { background: #10b981; }
-.dot-evap { background: #f59e0b; }
 .dot-beached { background: #ef4444; }
 
 /* ========================== 趨勢微圖 (Sparkline Chart) ========================== */
@@ -606,14 +670,6 @@ body {
 }
 
 /* 預警報告區塊 */
-.alert-section {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 160px;
-  margin-bottom: 0;
-}
-
 .text-btn {
   background: transparent;
   border: none;
@@ -633,8 +689,8 @@ body {
   padding: 10px;
   border: 1px solid rgba(56, 189, 248, 0.15);
   overflow-y: auto;
-  max-height: 220px;
-  flex-grow: 1;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 #alert-box::-webkit-scrollbar {
@@ -864,8 +920,15 @@ body {
   top: 15px;
   right: 20px;
   display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   gap: 6px;
   z-index: 1000;
+}
+
+.toolbar-row {
+  display: flex;
+  gap: 6px;
 }
 
 .map-tool-btn {
@@ -910,9 +973,8 @@ body {
 
 /* 地圖圖例 (Legend) */
 .map-legend {
-  position: absolute;
-  bottom: 85px;
-  right: 20px;
+  position: relative;
+  flex-shrink: 0;
   background: rgba(9, 18, 36, 0.92);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(56, 189, 248, 0.3);
@@ -926,9 +988,7 @@ body {
 }
 
 .map-legend.hidden {
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(10px);
+  display: none;
 }
 
 .legend-header {
@@ -1470,6 +1530,92 @@ body {
   }
 }
 
+
+/* ========================== 浮動報告面板 (地圖右側) ========================== */
+.report-panel {
+  position: relative;
+  width: 380px;
+  max-width: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px;
+  background: rgba(9, 18, 36, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 242, 254, 0.4);
+  border-radius: 12px;
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.6), 0 0 18px rgba(0, 242, 254, 0.12);
+  z-index: 1050;
+  animation: reportSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.report-panel.hidden {
+  display: none;
+}
+
+.report-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.report-panel-header h3 {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  letter-spacing: 0.4px;
+}
+
+.report-panel-header .legend-close {
+  font-size: 1.4rem;
+  padding: 0 4px;
+}
+
+.report-panel-header .legend-close:hover {
+  color: #fff;
+}
+
+.report-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.report-actions .map-tool-btn {
+  flex: 1;
+  justify-content: center;
+}
+
+/* 運算中 / 錯誤狀態時不顯示匯出按鈕 */
+.report-panel:not([data-state="ready"]) .report-actions {
+  display: none;
+}
+
+/* 右側欄：工具列下方，圖例 + 報告面板由上而下排列並靠右對齊 */
+.map-right-stack {
+  position: absolute;
+  top: 100px;
+  right: 20px;
+  max-height: calc(100vh - 100px - 100px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  z-index: 1050;
+  pointer-events: none;
+}
+
+.map-right-stack > * {
+  pointer-events: auto;
+}
+
+@keyframes reportSlideIn {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
 /* ========================== 響應式佈局適應 ========================== */
 @media (max-width: 1024px) {
   #sidebar {
@@ -1522,5 +1668,15 @@ body {
   .map-hint {
     left: 60px;
     font-size: 0.72rem;
+  }
+  .map-right-stack {
+    top: 104px;
+    left: 10px;
+    right: 10px;
+    max-height: calc(100vh - 104px - 90px);
+    align-items: stretch;
+  }
+  .report-panel {
+    width: auto;
   }
 }
