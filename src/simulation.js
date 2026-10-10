@@ -7,7 +7,8 @@ import {
   updateOceanCompassHUD, 
   updateLegendVisuals, 
   collapseSidebar, 
-  showToast 
+  showToast,
+  generateCoastlineAlerts 
 } from './uiHelper.js';
 import { 
   renderStep, 
